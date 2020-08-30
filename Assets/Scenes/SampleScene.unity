@@ -424,6 +424,8 @@ GameObject:
   - component: {fileID: 701847868}
   - component: {fileID: 701847862}
   - component: {fileID: 701847867}
+  - component: {fileID: 701847870}
+  - component: {fileID: 701847866}
   m_Layer: 0
   m_Name: GhostAgent
   m_TagString: Untagged
@@ -500,7 +502,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 701847861}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -3, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1.5, z: 1}
   m_Children:
@@ -508,6 +510,20 @@ Transform:
   m_Father: {fileID: 1505336043}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &701847866
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 701847861}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1e98dd2b8c703445bed5d8db658b5e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movementSpeed: 0.5
+  rotationSpeed: 3
 --- !u!114 &701847867
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -538,14 +554,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 6
+    VectorObservationSize: 5
     NumStackedVectorObservations: 1
-    VectorActionSize: 05000000
+    VectorActionSize: 0200000003000000
     VectorActionDescriptions: []
     VectorActionSpaceType: 0
   m_Model: {fileID: 0}
   m_InferenceDevice: 0
-  m_BehaviorType: 0
+  m_BehaviorType: 1
   m_BehaviorName: GhostAgent
   TeamId: 0
   m_UseChildSensors: 0
@@ -563,6 +579,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DecisionPeriod: 10
   TakeActionsBetweenDecisions: 1
+--- !u!143 &701847870
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 701847861}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Height: 1
+  m_Radius: 0.5
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1505336042
 GameObject:
   m_ObjectHideFlags: 0

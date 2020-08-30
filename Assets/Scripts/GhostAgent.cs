@@ -8,9 +8,12 @@ public class GhostAgent : Agent
 {
     public Transform playerTransform;
     private Vector3 playerStart;
+    private MovementController movementController;
+
     void Start()
     {
         this.playerStart = playerTransform.localPosition;
+        this.movementController = GetComponent<MovementController>();
     }
 
     public override void OnEpisodeBegin()
@@ -25,14 +28,20 @@ public class GhostAgent : Agent
 
     public override void CollectObservations(VectorSensor sensor)
     {
-        sensor.AddObservation(playerTransform.localPosition);
-        sensor.AddObservation(this.transform.localPosition);
+        sensor.AddObservation(playerTransform.localRotation.y);
+        sensor.AddObservation(playerTransform.localPosition.x);
+        sensor.AddObservation(playerTransform.localPosition.z);
+        sensor.AddObservation(this.transform.localPosition.x);
+        sensor.AddObservation(this.transform.localPosition.z);
     }
 
     public override void OnActionReceived(float[] act)
     {
         int movement = Mathf.FloorToInt(act[0]);
         Move(movement);
+
+        int rotation = Mathf.FloorToInt(act[1]);
+        Rotate(rotation);
 
         // rewards
         float distanceToTarget = Vector3.Distance(this.transform.localPosition, this.playerTransform.localPosition);
@@ -53,6 +62,7 @@ public class GhostAgent : Agent
 
     public override void Heuristic(float[] actionsOut)
     {
+
         actionsOut[0] = Input.GetAxis("Horizontal");
         actionsOut[1] = Input.GetAxis("Vertical");
     }
@@ -72,18 +82,21 @@ public class GhostAgent : Agent
 
     private void Move(int direction)
     {
-        float step = 0.01f;
-        Vector3 movement = Vector3.zero;
-        // up
-        if (direction == 1) movement.z = step;
-        // down
-        if (direction == 2) movement.z = -step;
-        // left
-        if (direction == 3) movement.x = -step;
-        // right
-        if (direction == 4) movement.x = step;
-         
-        this.transform.localPosition += movement;
+        // forward
+        if (direction == 1) this.movementController.Move();
+        // direction == 2 for staying still
+    }
+
+    private void Rotate(int direction)
+    {
+        float rotationStep = 0.1f;
+        Quaternion rotation = Quaternion.identity;
+        // rotate left
+        if (direction == 0) this.movementController.Rotate(-rotationStep);
+        // rotate right
+        if (direction == 1) this.movementController.Rotate(rotationStep);
+
+
     }
 
 }
