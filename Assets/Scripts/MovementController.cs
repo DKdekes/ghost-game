@@ -6,7 +6,7 @@ public class MovementController: MonoBehaviour
 {
 
     public float movementSpeed = 0.5F;
-    public float rotationSpeed = 3.0F;
+    public float rotationSpeed = 120F;
     private Vector3 moveDirection = Vector3.zero;
     private CharacterController controller;
 
@@ -16,10 +16,10 @@ public class MovementController: MonoBehaviour
         this.controller = GetComponent<CharacterController>();
     }
 
-    public void Move()
+    public void Move(Vector3 direction)
     {
         // step player
-        moveDirection = new Vector3(0, 0, movementSpeed);
+        moveDirection = direction * movementSpeed;
         moveDirection = transform.TransformDirection(moveDirection);
         controller.Move(movementSpeed * moveDirection * Time.deltaTime);
     }
@@ -27,7 +27,7 @@ public class MovementController: MonoBehaviour
     public void Rotate(float rotationDegrees)
     { 
         //Rotate Player
-        transform.Rotate(0, rotationDegrees * rotationSpeed, 0);
+        transform.Rotate(0, rotationDegrees * rotationSpeed * Time.deltaTime, 0);
     }
 
 }
