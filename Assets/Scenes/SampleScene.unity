@@ -258,7 +258,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -314,7 +314,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e86480f45d49f2f4fb76bf5956d3e553, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 3
+  speed: 0.2
 --- !u!1 &701847861
 GameObject:
   m_ObjectHideFlags: 0
@@ -448,6 +448,7 @@ MonoBehaviour:
     maxStep: 0
   hasUpgradedFromAgentParameters: 1
   MaxStep: 0
+  boundaryPlane: {fileID: 1943352040}
   playerTransform: {fileID: 587546255}
   origin: {fileID: 1501800207}
   barrel: {fileID: 1100580762}
@@ -465,8 +466,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_BrainParameters:
     VectorObservationSize: 6
-    NumStackedVectorObservations: 1
-    VectorActionSize: 040000000300000002000000
+    NumStackedVectorObservations: 5
+    VectorActionSize: 07000000
     VectorActionDescriptions: []
     VectorActionSpaceType: 0
   m_Model: {fileID: 5022602860645237092, guid: e6fd05d6cbcd0a749b073c04939f4d13, type: 3}

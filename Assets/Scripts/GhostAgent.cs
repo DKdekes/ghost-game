@@ -6,6 +6,7 @@ using Unity.MLAgents.Sensors;
 
 public class GhostAgent : Agent
 {
+    public GameObject boundaryPlane;
     public Transform playerTransform;
     private Vector3 playerStart;
     private MovementController movementController;
@@ -13,9 +14,15 @@ public class GhostAgent : Agent
     public GameObject origin;
     public GameObject barrel;
     private readonly object positionLock = new object();
-    private float shootPunishment = 0.0001f;
-    private float reward = 1f;
+    private float shootPunishment = 0.01f;
+    private float reward = 0f;
     private bool resetting = false;
+    float minX, maxX, minZ, maxZ, xScaler, zScaler;
+
+    private void Awake()
+    {
+        SetBoundaries();
+    }
 
     void Start()
     {
@@ -28,8 +35,14 @@ public class GhostAgent : Agent
 
     private void Reward()
     {
-            SetReward(reward);
-            EndEpisode();
+        reward += 1f;
+        FinalizeReward();
+        EndEpisode();
+    }
+
+    private void FinalizeReward()
+    {
+        SetReward(reward > 0 ? reward : 0);
     }
 
     public override void OnEpisodeBegin()
@@ -37,59 +50,87 @@ public class GhostAgent : Agent
         lock (this)
         {
             resetting = true;
-            reward = 1f;
+            reward = 0f;
             this.transform.position = new Vector3(Random.Range(-3.5f, 3.5f), 1, Random.Range(-2f, 3.5f));
             this.transform.Rotate(new Vector3(0, Random.Range(-180f, 180f), 0));
             playerTransform.localPosition = new Vector3(Random.Range(-3.5f, 3.5f), 0.5f, -4.5f);
         }
     }
 
+    private void SetBoundaries()
+    {
+        Vector3 scale = this.boundaryPlane.transform.localScale;
+        Vector3 position = this.boundaryPlane.transform.position;
+        float xHalf = scale.x * 5;
+        float zHalf = scale.y * 5;
+        this.minX = position.x - xHalf;
+        this.maxX = position.x + xHalf;
+        this.xScaler = this.maxX - this.minX;
+
+        this.minZ = position.z - zHalf;
+        this.maxZ = position.z + zHalf;
+        this.zScaler = this.maxZ - this.minZ;
+    }
+
+    private (float, float) NormalizePosition(float x, float z)
+    {
+        float xNorm = (x - this.minX) / this.xScaler;
+        float zNorm = (z - this.minZ) / this.zScaler;
+        return (xNorm, zNorm);
+    }
+
+
     public override void CollectObservations(VectorSensor sensor)
     {
         // agent position / rotation
-        sensor.AddObservation(this.transform.localRotation.y);
-        sensor.AddObservation(this.transform.localPosition.x);
-        sensor.AddObservation(this.transform.localPosition.z);
+        sensor.AddObservation(this.transform.localRotation.y / 180f);
+        (float xNorm, float zNorm) = NormalizePosition(this.transform.localPosition.x, this.transform.localPosition.z);
+        sensor.AddObservation(xNorm);
+        sensor.AddObservation(zNorm);
+
 
         // shoot state
         sensor.AddObservation(shooter.GetShootReady());
 
         // player position 2d
-        sensor.AddObservation(playerTransform.localPosition.x);
-        sensor.AddObservation(playerTransform.localPosition.z);
+        (float pXNorm, float pZNorm) = NormalizePosition(playerTransform.localPosition.x, playerTransform.localPosition.z);
+        sensor.AddObservation(pXNorm);
+        sensor.AddObservation(pZNorm);
         
     }
 
     public override void OnActionReceived(float[] act)
     {
-        lock(this)
+        // walk
+        int action = Mathf.FloorToInt(act[0]);
+
+        if (action >= 0 && action <=3)
         {
-            // walk
-            int movement = Mathf.FloorToInt(act[0]);
-            Move(movement);
+            Move(action);
+        }
+        else if (action >= 4 && action <=5)
+        {
+            Rotate(action);
+        }
+        else if (action == 6)
+        {
+            Shoot();
+        }
+        // rewards
+        float distanceToTarget = Vector3.Distance(this.transform.localPosition, this.playerTransform.localPosition);
 
-            // rotate
-            int rotation = Mathf.FloorToInt(act[1]);
-            Rotate(rotation);
+        // hit player
+        if (distanceToTarget < 1.42f)
+        {
+            FinalizeReward();
+            EndEpisode();
+        }
 
-            // shoot
-            int shoot = Mathf.FloorToInt(act[2]);
-            Shoot(shoot);
-
-            // rewards
-            float distanceToTarget = Vector3.Distance(this.transform.localPosition, this.playerTransform.localPosition);
-
-            // hit player
-            if (distanceToTarget < 1.42f)
-            {
-                EndEpisode();
-            }
-
-            // out of bounds
-            if (!InBounds(this.transform.localPosition))
-            {
-                EndEpisode();
-            }
+        // out of bounds
+        if (!InBounds(this.transform.localPosition))
+        {
+            FinalizeReward();
+            EndEpisode();
         }
     }
 
@@ -160,18 +201,15 @@ public class GhostAgent : Agent
             float rotationStep = 0.1f;
             Quaternion rotation = Quaternion.identity;
             // rotate left
-            if (direction == 0) this.movementController.Rotate(-rotationStep);
+            if (direction == 3) this.movementController.Rotate(-rotationStep);
             // rotate right
-            if (direction == 1) this.movementController.Rotate(rotationStep);
+            if (direction == 4) this.movementController.Rotate(rotationStep);
     }
 
-    private void Shoot(int shoot)
+    private void Shoot()
     {
         reward -= shootPunishment;
-        if (shoot == 0)
-        {
-            shooter.Shoot(origin.transform.position, barrel.transform.position);
-        }
+        shooter.Shoot(origin.transform.position, barrel.transform.position);
     }
 
 }
