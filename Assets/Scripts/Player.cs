@@ -25,6 +25,7 @@ public class Player : MonoBehaviour
     {
 
         this.transform.localPosition += Vector3.forward * Time.deltaTime * speed;
+        /*
         if (Input.GetKey(KeyCode.W))
         {
             this.transform.localPosition += Vector3.forward * Time.deltaTime * speed;
@@ -41,6 +42,7 @@ public class Player : MonoBehaviour
         {
             this.transform.localPosition += Vector3.right * Time.deltaTime * speed;
         }
+        */
         position = this.transform.localPosition;
     }
 

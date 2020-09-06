@@ -51,9 +51,9 @@ public class GhostAgent : Agent
         {
             resetting = true;
             reward = 0f;
-            this.transform.position = new Vector3(Random.Range(-3.5f, 3.5f), 1, Random.Range(-2f, 3.5f));
+            this.transform.position = new Vector3(Random.Range(this.minX, this.maxX), 1, Random.Range(this.minZ, this.maxZ));
             this.transform.Rotate(new Vector3(0, Random.Range(-180f, 180f), 0));
-            playerTransform.localPosition = new Vector3(Random.Range(-3.5f, 3.5f), 0.5f, -4.5f);
+            playerTransform.localPosition = new Vector3(Random.Range(this.minX, this.maxX), 0.5f, this.minZ);
         }
     }
 
@@ -62,7 +62,7 @@ public class GhostAgent : Agent
         Vector3 scale = this.boundaryPlane.transform.localScale;
         Vector3 position = this.boundaryPlane.transform.position;
         float xHalf = scale.x * 5;
-        float zHalf = scale.y * 5;
+        float zHalf = scale.z * 5;
         this.minX = position.x - xHalf;
         this.maxX = position.x + xHalf;
         this.xScaler = this.maxX - this.minX;
@@ -83,7 +83,7 @@ public class GhostAgent : Agent
     public override void CollectObservations(VectorSensor sensor)
     {
         // agent position / rotation
-        sensor.AddObservation(this.transform.localRotation.y / 180f);
+        // sensor.AddObservation(this.transform.localRotation.y / 180f);
         (float xNorm, float zNorm) = NormalizePosition(this.transform.localPosition.x, this.transform.localPosition.z);
         sensor.AddObservation(xNorm);
         sensor.AddObservation(zNorm);
@@ -93,9 +93,9 @@ public class GhostAgent : Agent
         sensor.AddObservation(shooter.GetShootReady());
 
         // player position 2d
-        (float pXNorm, float pZNorm) = NormalizePosition(playerTransform.localPosition.x, playerTransform.localPosition.z);
-        sensor.AddObservation(pXNorm);
-        sensor.AddObservation(pZNorm);
+        // (float pXNorm, float pZNorm) = NormalizePosition(playerTransform.localPosition.x, playerTransform.localPosition.z);
+        // sensor.AddObservation(pXNorm);
+        // sensor.AddObservation(pZNorm);
         
     }
 
@@ -136,47 +136,42 @@ public class GhostAgent : Agent
 
     public override void Heuristic(float[] actionsOut)
     {
+        actionsOut[0] = 3f;
         // walk
         if (Input.GetKey(KeyCode.W))
         {
             actionsOut[0] = 0f;
-        } else if (Input.GetKey(KeyCode.A))
+        }
+        if (Input.GetKey(KeyCode.A))
         {
             actionsOut[0] = 1f;
-        } else if (Input.GetKey(KeyCode.D)) {
-            actionsOut[0] = 2f;
-        } else
-        {
-            actionsOut[0] = 3f;
         }
-
+        if (Input.GetKey(KeyCode.D)) {
+            actionsOut[0] = 2f;
+        }
+        // 3 is do nothing
         // rotate
         if (Input.GetKey(KeyCode.LeftArrow))
         {
-            actionsOut[1] = 0;
-        } else if (Input.GetKey(KeyCode.RightArrow)) {
-            actionsOut[1] = 1;
-        } else
-        {
-            actionsOut[1] = 2;
+            actionsOut[0] = 4;
         }
-
+        if (Input.GetKey(KeyCode.RightArrow))
+        {
+            actionsOut[0] = 5;
+        }
         // shoot
         if (Input.GetKey(KeyCode.Space))
         {
-            actionsOut[2] = 0;
-        } else
-        {
-            actionsOut[2] = 1;
+            actionsOut[0] = 6;
         }
     }
 
     private bool InBounds(Vector3 position)
     {
         var playerPosition = this.playerTransform.localPosition;
-        if ((position.x > -5 && position.x < 5) && (position.z > -5 && position.z < 5))
+        if ((position.x > this.minX && position.x < this.maxX) && (position.z > this.minZ && position.z < this.maxZ))
         {
-            if ((playerPosition.x > -5 && playerPosition.x < 5) && (playerPosition.z > -5 && playerPosition.z < 5))
+            if ((playerPosition.x > this.minX && playerPosition.x < this.maxX) && (playerPosition.z > this.minZ && playerPosition.z < this.maxZ))
             {
                 return true;
             }
@@ -201,9 +196,9 @@ public class GhostAgent : Agent
             float rotationStep = 0.1f;
             Quaternion rotation = Quaternion.identity;
             // rotate left
-            if (direction == 3) this.movementController.Rotate(-rotationStep);
+            if (direction == 4) this.movementController.Rotate(-rotationStep);
             // rotate right
-            if (direction == 4) this.movementController.Rotate(rotationStep);
+            if (direction == 5) this.movementController.Rotate(rotationStep);
     }
 
     private void Shoot()

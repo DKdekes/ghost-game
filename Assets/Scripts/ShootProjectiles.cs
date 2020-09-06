@@ -20,7 +20,7 @@ public class ShootProjectiles : MonoBehaviour
     {
         if (frameCount > 0)
         {
-            frameCount--;
+            frameCount -= Time.deltaTime;
             if (frameCount <= 0)
             {
                 shootReady = true;
