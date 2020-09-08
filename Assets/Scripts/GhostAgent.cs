@@ -30,19 +30,21 @@ public class GhostAgent : Agent
         this.movementController = GetComponent<MovementController>();
         this.shooter = GetComponent<ShootProjectiles>();
         Projectile.PlayerHit += Reward;
+        // Time.timeScale = 1.0f;
     }
 
 
     private void Reward()
     {
         reward += 1f;
-        FinalizeReward();
+        FinalizeReward(true);
         EndEpisode();
     }
 
-    private void FinalizeReward()
+    private void FinalizeReward(bool won)
     {
-        SetReward(reward > 0 ? reward : 0);
+        float min = won ? 0.1f : 0;
+        SetReward(reward > 0 ? reward : min);
     }
 
     public override void OnEpisodeBegin()
@@ -51,7 +53,7 @@ public class GhostAgent : Agent
         {
             resetting = true;
             reward = 0f;
-            this.transform.position = new Vector3(Random.Range(this.minX, this.maxX), 1, Random.Range(this.minZ, this.maxZ));
+            this.transform.position = new Vector3(Random.Range(this.minX + 1f, this.maxX - 1f), 1, Random.Range(this.minZ + 1f, this.maxZ - 1f));
             this.transform.Rotate(new Vector3(0, Random.Range(-180f, 180f), 0));
             playerTransform.localPosition = new Vector3(Random.Range(this.minX, this.maxX), 0.5f, this.minZ);
         }
@@ -122,14 +124,14 @@ public class GhostAgent : Agent
         // hit player
         if (distanceToTarget < 1.42f)
         {
-            FinalizeReward();
+            FinalizeReward(false);
             EndEpisode();
         }
 
         // out of bounds
         if (!InBounds(this.transform.localPosition))
         {
-            FinalizeReward();
+            FinalizeReward(false);
             EndEpisode();
         }
     }
