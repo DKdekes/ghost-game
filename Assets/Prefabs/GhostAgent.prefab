@@ -225,7 +225,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 51e3601deb38ffd40aea2d806dcf6363, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -285,6 +285,7 @@ MonoBehaviour:
   m_BehaviorName: GhostAgent
   TeamId: 0
   m_UseChildSensors: 0
+  m_ObservableAttributeHandling: 0
 --- !u!65 &8801559196740056433
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -315,7 +316,7 @@ MonoBehaviour:
   hasUpgradedFromAgentParameters: 1
   MaxStep: 0
   boundaryPlane: {fileID: 0}
-  playerTransform: {fileID: 0}
+  player: {fileID: 0}
   origin: {fileID: 8801559195394870088}
   barrel: {fileID: 8801559194991832029}
 --- !u!143 &8801559196740056441
@@ -349,7 +350,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeed: 1
-  rotationSpeed: 300
+  rotationSpeed: 360
 --- !u!114 &8801559196740056440
 MonoBehaviour:
   m_ObjectHideFlags: 0

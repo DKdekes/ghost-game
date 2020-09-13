@@ -5,7 +5,8 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     private static Vector3 position;
-    public float speed = 3f;
+    public float speed = 1f;
+    private float heuristicSpeed = 0.7f;
 
     public static bool IsHit(Vector3 projectilePosition, float maxRange)
     {
@@ -21,28 +22,32 @@ public class Player : MonoBehaviour
         position = this.transform.position;
     }
 
+    public void SetSpeed(float speed)
+    {
+        this.speed = speed;
+    }
+
     void Update()
     {
-
         this.transform.localPosition += Vector3.forward * Time.deltaTime * speed;
-        /*
+        
         if (Input.GetKey(KeyCode.W))
         {
-            this.transform.localPosition += Vector3.forward * Time.deltaTime * speed;
+            this.transform.localPosition += Vector3.forward * Time.deltaTime * heuristicSpeed;
         }
         if (Input.GetKey(KeyCode.A))
         {
-            this.transform.localPosition += Vector3.left * Time.deltaTime * speed;
+            this.transform.localPosition += Vector3.left * Time.deltaTime * heuristicSpeed;
         }
         if (Input.GetKey(KeyCode.S))
         {
-            this.transform.localPosition += Vector3.back * Time.deltaTime * speed;
+            this.transform.localPosition += Vector3.back * Time.deltaTime * heuristicSpeed;
         }
         if (Input.GetKey(KeyCode.D))
         {
-            this.transform.localPosition += Vector3.right * Time.deltaTime * speed;
+            this.transform.localPosition += Vector3.right * Time.deltaTime * heuristicSpeed;
         }
-        */
+        
         position = this.transform.localPosition;
     }
 

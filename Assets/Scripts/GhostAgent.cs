@@ -7,7 +7,7 @@ using Unity.MLAgents.Sensors;
 public class GhostAgent : Agent
 {
     public GameObject boundaryPlane;
-    public Transform playerTransform;
+    public Player player;
     private Vector3 playerStart;
     private MovementController movementController;
     private ShootProjectiles shooter;
@@ -18,19 +18,21 @@ public class GhostAgent : Agent
     private float reward = 0f;
     private bool resetting = false;
     float minX, maxX, minZ, maxZ, xScaler, zScaler;
+    EnvironmentParameters envParams; 
 
     private void Awake()
     {
         SetBoundaries();
+        envParams = Academy.Instance.EnvironmentParameters;
     }
 
     void Start()
     {
-        this.playerStart = playerTransform.localPosition;
+        this.playerStart = this.player.transform.localPosition;
         this.movementController = GetComponent<MovementController>();
         this.shooter = GetComponent<ShootProjectiles>();
         Projectile.PlayerHit += Reward;
-        // Time.timeScale = 1.0f;
+        Time.timeScale = 6f;
     }
 
 
@@ -49,14 +51,11 @@ public class GhostAgent : Agent
 
     public override void OnEpisodeBegin()
     {
-        lock (this)
-        {
-            resetting = true;
-            reward = 0f;
-            this.transform.position = new Vector3(Random.Range(this.minX + 1f, this.maxX - 1f), 1, Random.Range(this.minZ + 1f, this.maxZ - 1f));
-            this.transform.Rotate(new Vector3(0, Random.Range(-180f, 180f), 0));
-            playerTransform.localPosition = new Vector3(Random.Range(this.minX, this.maxX), 0.5f, this.minZ);
-        }
+        this.player.SetSpeed(envParams.GetWithDefault("player_speed", 0.0f));
+        reward = 0f;
+        this.transform.position = new Vector3(Random.Range(this.minX + 1f, this.maxX - 1f), 1, Random.Range(this.minZ + 1f, this.maxZ - 1f));
+        this.transform.Rotate(new Vector3(0, Random.Range(-180f, 180f), 0));
+        this.player.transform.localPosition = new Vector3(Random.Range(this.minX, this.maxX), 0.5f, this.minZ);
     }
 
     private void SetBoundaries()
@@ -119,7 +118,7 @@ public class GhostAgent : Agent
             Shoot();
         }
         // rewards
-        float distanceToTarget = Vector3.Distance(this.transform.localPosition, this.playerTransform.localPosition);
+        float distanceToTarget = Vector3.Distance(this.transform.localPosition, this.player.transform.localPosition);
 
         // hit player
         if (distanceToTarget < 1.42f)
@@ -170,10 +169,10 @@ public class GhostAgent : Agent
 
     private bool InBounds(Vector3 position)
     {
-        var playerPosition = this.playerTransform.localPosition;
+        var playerPosition = this.player.transform.localPosition;
         if ((position.x > this.minX && position.x < this.maxX) && (position.z > this.minZ && position.z < this.maxZ))
         {
-            if ((playerPosition.x > this.minX && playerPosition.x < this.maxX) && (playerPosition.z > this.minZ && playerPosition.z < this.maxZ))
+            if ((playerPosition.x > this.minX && playerPosition.x < this.maxX) && (playerPosition.z <= this.maxZ))
             {
                 return true;
             }
