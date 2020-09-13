@@ -53,7 +53,7 @@ public class GhostAgent : Agent
     {
         this.player.SetSpeed(envParams.GetWithDefault("player_speed", 0.0f));
         reward = 0f;
-        this.transform.position = new Vector3(Random.Range(this.minX + 1f, this.maxX - 1f), 1, Random.Range(this.minZ + 1f, this.maxZ - 1f));
+        this.transform.position = new Vector3(Random.Range(this.minX + 1.5f, this.maxX - 1.5f), 1, Random.Range(this.minZ + 1.5f, this.maxZ - 1.5f));
         this.transform.Rotate(new Vector3(0, Random.Range(-180f, 180f), 0));
         this.player.transform.localPosition = new Vector3(Random.Range(this.minX + 1f, this.maxX - 1f), 0.5f, this.minZ + 1f);
     }
@@ -133,6 +133,14 @@ public class GhostAgent : Agent
             FinalizeReward(false);
             EndEpisode();
         }
+
+    }
+
+    //collides with an obstacle
+    public void OnTriggerEnter(Collider other)
+    {
+        FinalizeReward(false);
+        EndEpisode();
     }
 
     public override void Heuristic(float[] actionsOut)
