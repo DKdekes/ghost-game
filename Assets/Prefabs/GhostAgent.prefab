@@ -170,8 +170,8 @@ GameObject:
   - component: {fileID: 8801559196740056443}
   - component: {fileID: 8801559196740056433}
   - component: {fileID: 8801559196740056444}
-  - component: {fileID: 8801559196740056441}
   - component: {fileID: 8801559196740056445}
+  - component: {fileID: 8801559196740056441}
   - component: {fileID: 8801559196740056440}
   - component: {fileID: 8801559196740056327}
   m_Layer: 0
@@ -319,6 +319,20 @@ MonoBehaviour:
   player: {fileID: 0}
   origin: {fileID: 8801559195394870088}
   barrel: {fileID: 8801559194991832029}
+--- !u!114 &8801559196740056445
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8801559196740056434}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1e98dd2b8c703445bed5d8db658b5e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movementSpeed: 1
+  rotationSpeed: 360
 --- !u!143 &8801559196740056441
 CharacterController:
   m_ObjectHideFlags: 0
@@ -337,20 +351,6 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &8801559196740056445
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8801559196740056434}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a1e98dd2b8c703445bed5d8db658b5e7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  movementSpeed: 1
-  rotationSpeed: 360
 --- !u!114 &8801559196740056440
 MonoBehaviour:
   m_ObjectHideFlags: 0
