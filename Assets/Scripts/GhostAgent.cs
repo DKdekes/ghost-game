@@ -55,7 +55,7 @@ public class GhostAgent : Agent
         reward = 0f;
         this.transform.position = new Vector3(Random.Range(this.minX + 1f, this.maxX - 1f), 1, Random.Range(this.minZ + 1f, this.maxZ - 1f));
         this.transform.Rotate(new Vector3(0, Random.Range(-180f, 180f), 0));
-        this.player.transform.localPosition = new Vector3(Random.Range(this.minX, this.maxX), 0.5f, this.minZ);
+        this.player.transform.localPosition = new Vector3(Random.Range(this.minX + 1f, this.maxX - 1f), 0.5f, this.minZ + 1f);
     }
 
     private void SetBoundaries()
