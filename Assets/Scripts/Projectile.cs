@@ -25,10 +25,10 @@ public class Projectile : MonoBehaviour
             Destroy(gameObject);
         }
     }
-
-    private void OnTriggerEnter(Collision collision)
+    public void OnTriggerEnter(Collider other)
     {
         Destroy(gameObject);
     }
+
 
 }
