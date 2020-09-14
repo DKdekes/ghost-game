@@ -17,6 +17,7 @@ public class GhostAgent : Agent
     private float shootPunishment = 0.01f;
     private float reward = 0f;
     private bool resetting = false;
+    private bool triggerBool = true;
     float minX, maxX, minZ, maxZ, xScaler, zScaler;
     EnvironmentParameters envParams; 
 
@@ -56,6 +57,7 @@ public class GhostAgent : Agent
         this.transform.position = new Vector3(Random.Range(this.minX + 1.5f, this.maxX - 1.5f), 1, Random.Range(this.minZ + 1.5f, this.maxZ - 1.5f));
         this.transform.Rotate(new Vector3(0, Random.Range(-180f, 180f), 0));
         this.player.transform.localPosition = new Vector3(Random.Range(this.minX + 1f, this.maxX - 1f), 0.5f, this.minZ + 1f);
+        triggerBool = true;
     }
 
     private void SetBoundaries()
@@ -137,11 +139,16 @@ public class GhostAgent : Agent
     }
 
     //collides with an obstacle
-    public void OnTriggerEnter(Collider other)
+    /*public void OnTriggerEnter(Collider other)
     {
-        FinalizeReward(false);
-        EndEpisode();
-    }
+        if (triggerBool == true)
+        {
+            FinalizeReward(false);
+            EndEpisode();
+            triggerBool = false;
+        }
+        
+    }*/
 
     public override void Heuristic(float[] actionsOut)
     {

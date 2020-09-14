@@ -1224,14 +1224,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1505336043}
     m_Modifications:
-    - target: {fileID: -965555148325632387, guid: 4b3a06bf29b99f442b5cc5c4e8d2b5cf, type: 3}
-      propertyPath: m_Constraints
-      value: 126
-      objectReference: {fileID: 0}
-    - target: {fileID: -965555148325632387, guid: 4b3a06bf29b99f442b5cc5c4e8d2b5cf, type: 3}
-      propertyPath: m_CollisionDetection
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 8801559194991832028, guid: 4b3a06bf29b99f442b5cc5c4e8d2b5cf, type: 3}
       propertyPath: m_LocalPosition.z
       value: 1
@@ -1239,7 +1231,7 @@ PrefabInstance:
     - target: {fileID: 8801559196183993676, guid: 4b3a06bf29b99f442b5cc5c4e8d2b5cf, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 1d9f1a4123c9294419c7ce153822fc1a, type: 2}
+      objectReference: {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
     - target: {fileID: 8801559196183993679, guid: 4b3a06bf29b99f442b5cc5c4e8d2b5cf, type: 3}
       propertyPath: m_Name
       value: Face
@@ -1262,7 +1254,7 @@ PrefabInstance:
       objectReference: {fileID: 5022602860645237092, guid: d023533e7beced440a8ded6c8c336167, type: 3}
     - target: {fileID: 8801559196740056443, guid: 4b3a06bf29b99f442b5cc5c4e8d2b5cf, type: 3}
       propertyPath: m_BehaviorType
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8801559196740056443, guid: 4b3a06bf29b99f442b5cc5c4e8d2b5cf, type: 3}
       propertyPath: m_BrainParameters.VectorActionSpaceType
