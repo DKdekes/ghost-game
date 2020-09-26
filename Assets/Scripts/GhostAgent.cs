@@ -17,13 +17,11 @@ public class GhostAgent : Agent
     private float shootPunishment = 0.01f;
     public float reward = 0f;
     private bool resetting = false;
-    public float minX, maxX, minZ, maxZ, xScaler, zScaler;
+    protected float minX, maxX, minZ, maxZ, xScaler, zScaler;
     public EnvironmentParameters envParams;
     private Vector2 noiseDirection = Vector2.zero;
     private float directionDecay = 0.99f;
     private bool triggerBool = true;
-    float minX, maxX, minZ, maxZ, xScaler, zScaler;
-    EnvironmentParameters envParams; 
 
     private void Awake()
     {
@@ -37,7 +35,7 @@ public class GhostAgent : Agent
         this.movementController = GetComponent<MovementController>();
         this.shooter = GetComponent<ShootProjectiles>();
         Projectile.PlayerHit += Reward;
-        // Time.timeScale = 6f;
+        Time.timeScale = 6f;
     }
 
 
