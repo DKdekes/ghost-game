@@ -1225,6 +1225,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1505336043}
     m_Modifications:
+    - target: {fileID: -6755685119782250699, guid: 4b3a06bf29b99f442b5cc5c4e8d2b5cf, type: 3}
+      propertyPath: m_Constraints
+      value: 116
+      objectReference: {fileID: 0}
     - target: {fileID: 8801559194991832028, guid: 4b3a06bf29b99f442b5cc5c4e8d2b5cf, type: 3}
       propertyPath: m_LocalPosition.z
       value: 1
@@ -1264,7 +1268,7 @@ PrefabInstance:
     - target: {fileID: 8801559196740056444, guid: 4b3a06bf29b99f442b5cc5c4e8d2b5cf, type: 3}
       propertyPath: boundaryPlane
       value: 
-      objectReference: {fileID: 1943352040}
+      objectReference: {fileID: 1943352044}
     - target: {fileID: 8801559196740056444, guid: 4b3a06bf29b99f442b5cc5c4e8d2b5cf, type: 3}
       propertyPath: playerTransform
       value: 
@@ -1317,5 +1321,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8801559196740056441, guid: 4b3a06bf29b99f442b5cc5c4e8d2b5cf, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 4b3a06bf29b99f442b5cc5c4e8d2b5cf, type: 3}
