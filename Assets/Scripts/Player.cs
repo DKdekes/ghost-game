@@ -7,6 +7,7 @@ public class Player : MonoBehaviour
     private static Vector3 position;
     public float speed = 1f;
     private float heuristicSpeed = 0.7f;
+    private float noiseLevel = 1f;
 
     public static bool IsHit(Vector3 projectilePosition, float maxRange)
     {
@@ -20,6 +21,11 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         position = this.transform.position;
+    }
+
+    public float GetNoiseLevel()
+    {
+        return this.noiseLevel;
     }
 
     public void SetSpeed(float speed)
@@ -51,8 +57,8 @@ public class Player : MonoBehaviour
         position = this.transform.localPosition;
     }
 
-    public Vector3 GetPosition()
+    public Vector2 GetPosition()
     {
-        return this.transform.position;
+        return new Vector2(this.transform.position.x, this.transform.position.z);
     }
 }

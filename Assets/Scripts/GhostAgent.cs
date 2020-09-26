@@ -6,7 +6,7 @@ using Unity.MLAgents.Sensors;
 
 public class GhostAgent : Agent
 {
-    public GameObject boundaryPlane;
+    public Transform boundaryPlane;
     public Player player;
     private Vector3 playerStart;
     private MovementController movementController;
@@ -15,10 +15,12 @@ public class GhostAgent : Agent
     public GameObject barrel;
     private readonly object positionLock = new object();
     private float shootPunishment = 0.01f;
-    private float reward = 0f;
+    public float reward = 0f;
     private bool resetting = false;
-    float minX, maxX, minZ, maxZ, xScaler, zScaler;
-    EnvironmentParameters envParams; 
+    public float minX, maxX, minZ, maxZ, xScaler, zScaler;
+    public EnvironmentParameters envParams;
+    private Vector2 noiseDirection = Vector2.zero;
+    private float directionDecay = 0.99f;
 
     private void Awake()
     {
@@ -32,7 +34,7 @@ public class GhostAgent : Agent
         this.movementController = GetComponent<MovementController>();
         this.shooter = GetComponent<ShootProjectiles>();
         Projectile.PlayerHit += Reward;
-        Time.timeScale = 6f;
+        // Time.timeScale = 6f;
     }
 
 
@@ -43,7 +45,7 @@ public class GhostAgent : Agent
         EndEpisode();
     }
 
-    private void FinalizeReward(bool won)
+    public void FinalizeReward(bool won)
     {
         float min = won ? 0.1f : 0;
         SetReward(reward > 0 ? reward : min);
@@ -56,12 +58,13 @@ public class GhostAgent : Agent
         this.transform.position = new Vector3(Random.Range(this.minX + 1f, this.maxX - 1f), 1, Random.Range(this.minZ + 1f, this.maxZ - 1f));
         this.transform.Rotate(new Vector3(0, Random.Range(-180f, 180f), 0));
         this.player.transform.localPosition = new Vector3(Random.Range(this.minX, this.maxX), 0.5f, this.minZ);
+        noiseDirection = Vector2.zero;
     }
 
     private void SetBoundaries()
     {
-        Vector3 scale = this.boundaryPlane.transform.localScale;
-        Vector3 position = this.boundaryPlane.transform.position;
+        Vector3 scale = this.boundaryPlane.localScale;
+        Vector3 position = this.boundaryPlane.position;
         float xHalf = scale.x * 5;
         float zHalf = scale.z * 5;
         this.minX = position.x - xHalf;
@@ -73,11 +76,11 @@ public class GhostAgent : Agent
         this.zScaler = this.maxZ - this.minZ;
     }
 
-    private (float, float) NormalizePosition(float x, float z)
+    private Vector2 NormalizePosition(float x, float z)
     {
         float xNorm = (x - this.minX) / this.xScaler;
         float zNorm = (z - this.minZ) / this.zScaler;
-        return (xNorm, zNorm);
+        return new Vector2(xNorm, zNorm);
     }
 
 
@@ -85,19 +88,37 @@ public class GhostAgent : Agent
     {
         // agent position / rotation
         // sensor.AddObservation(this.transform.localRotation.y / 180f);
-        (float xNorm, float zNorm) = NormalizePosition(this.transform.localPosition.x, this.transform.localPosition.z);
-        sensor.AddObservation(xNorm);
-        sensor.AddObservation(zNorm);
+        // (float xNorm, float zNorm) = NormalizePosition(this.transform.localPosition.x, this.transform.localPosition.z);
+        // sensor.AddObservation(xNorm);
+        // sensor.AddObservation(zNorm);
 
+        Vector3 agentDirection = transform.TransformDirection(Vector3.forward);
+        sensor.AddObservation(agentDirection.x);
+        sensor.AddObservation(agentDirection.z);
 
         // shoot state
         sensor.AddObservation(shooter.GetShootReady());
 
-        // player position 2d
-        // (float pXNorm, float pZNorm) = NormalizePosition(playerTransform.localPosition.x, playerTransform.localPosition.z);
-        // sensor.AddObservation(pXNorm);
-        // sensor.AddObservation(pZNorm);
-        
+        // player noise vector
+        Vector2 dir = CalculateNoise();
+        sensor.AddObservation(dir.x);
+        sensor.AddObservation(dir.y);
+    }
+
+    private Vector3 CalculateNoise()
+    {
+        // vector to player
+        Vector2 agentPos = NormalizePosition(this.player.transform.localPosition.x, this.player.transform.localPosition.z);
+        Vector2 playerPos = NormalizePosition(this.transform.localPosition.x, this.transform.localPosition.z);
+        Vector2 currDirection = agentPos - playerPos;
+        /* 
+        if (Random.Range(0, 100) == 1)
+        {
+            noiseDirection += currDirection.normalized;
+        }
+        noiseDirection *= 0.99f;
+        */
+        return currDirection.normalized;
     }
 
     public override void OnActionReceived(float[] act)
@@ -117,10 +138,15 @@ public class GhostAgent : Agent
         {
             Shoot();
         }
-        // rewards
-        float distanceToTarget = Vector3.Distance(this.transform.localPosition, this.player.transform.localPosition);
 
-        // hit player
+        CheckEpisodeEnd();
+    }
+
+    public virtual void CheckEpisodeEnd()
+    {
+        float distanceToTarget = Vector3.Distance(this.transform.localPosition, 
+            this.player.transform.localPosition);
+        // contacted player
         if (distanceToTarget < 1.42f)
         {
             FinalizeReward(false);
@@ -202,7 +228,7 @@ public class GhostAgent : Agent
             if (direction == 5) this.movementController.Rotate(rotationStep);
     }
 
-    private void Shoot()
+    public virtual void Shoot()
     {
         reward -= shootPunishment;
         shooter.Shoot(origin.transform.position, barrel.transform.position);

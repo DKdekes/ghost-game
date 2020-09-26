@@ -1,5 +1,5 @@
 behaviors:
-  GhostAgent:
+  search:
     trainer_type: ppo
     hyperparameters:
       batch_size: 1024
@@ -25,12 +25,50 @@ behaviors:
     summary_freq: 10000
     threaded: true
 environment_parameters:
+  search_distance:
+    curriculum:
+      - name: Lesson0
+        completion_criteria:
+          measure: reward
+          behavior: search
+          signal_smoothing: true
+          min_lesson_length: 100
+          threshold: 0.8
+        value: 40
+      - name: Lesson1
+        completion_criteria:
+          measure: reward
+          behavior: search
+          signal_smoothing: true
+          min_lesson_length: 100
+          threshold: 0.8
+        value: 20
+      - name: Lesson2
+        completion_criteria:
+          measure: reward
+          behavior: search
+          signal_smoothing: true
+          min_lesson_length: 100
+          threshold: 0.8
+        value: 10
   player_speed:
     curriculum:
       - name: Lesson0
         completion_criteria:
           measure: reward
-          behavior: GhostAgent
+          behavior: search
+          signal_smoothing: true
+          min_lesson_length: 100
+          threshold: 0.8
+        value:
+          sampler_type: uniform
+          sampler_parameters:
+            min_value: 0.0
+            max_value: 0.05
+      - name: Lesson1
+        completion_criteria:
+          measure: reward
+          behavior: search
           signal_smoothing: true
           min_lesson_length: 100
           threshold: 0.8
@@ -39,27 +77,16 @@ environment_parameters:
           sampler_parameters:
             min_value: 0.0
             max_value: 0.2
-      - name: Lesson1
-        completion_criteria:
-          measure: reward
-          behavior: GhostAgent
-          signal_smoothing: true
-          min_lesson_length: 100
-          threshold: 0.8
-        value:
-          sampler_type: uniform
-          sampler_parameters:
-            min_value: 0.2
-            max_value: 0.6
       - name: Lesson2
         completion_criteria:
           measure: reward
-          behavior: GhostAgent
+          behavior: search
           signal_smoothing: true
           min_lesson_length: 100
           threshold: 0.8
         value:
           sampler_type: uniform
           sampler_parameters:
-            min_value: 0.6
-            max_value: 1.0
+            min_value: 0.0
+            max_value: 0.5
+  
