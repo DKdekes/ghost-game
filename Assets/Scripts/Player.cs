@@ -36,22 +36,24 @@ public class Player : MonoBehaviour
     void Update()
     {
         this.transform.localPosition += Vector3.forward * Time.deltaTime * speed;
+        //looking
+        this.transform.Rotate(-Input.GetAxis("Mouse Y"), Input.GetAxis("Mouse X"), 0);
         
         if (Input.GetKey(KeyCode.W))
         {
-            this.transform.localPosition += Vector3.forward * Time.deltaTime * heuristicSpeed;
+            this.transform.localPosition += this.transform.forward * Time.deltaTime * heuristicSpeed;
         }
         if (Input.GetKey(KeyCode.A))
         {
-            this.transform.localPosition += Vector3.left * Time.deltaTime * heuristicSpeed;
+            this.transform.localPosition += -this.transform.right * Time.deltaTime * heuristicSpeed;
         }
         if (Input.GetKey(KeyCode.S))
         {
-            this.transform.localPosition += Vector3.back * Time.deltaTime * heuristicSpeed;
+            this.transform.localPosition += -this.transform.forward * Time.deltaTime * heuristicSpeed;
         }
         if (Input.GetKey(KeyCode.D))
         {
-            this.transform.localPosition += Vector3.right * Time.deltaTime * heuristicSpeed;
+            this.transform.localPosition += this.transform.right * Time.deltaTime * heuristicSpeed;
         }
         
         position = this.transform.localPosition;

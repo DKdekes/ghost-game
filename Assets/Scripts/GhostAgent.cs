@@ -22,8 +22,6 @@ public class GhostAgent : Agent
     private Vector2 noiseDirection = Vector2.zero;
     private float directionDecay = 0.99f;
     private bool triggerBool = true;
-    float minX, maxX, minZ, maxZ, xScaler, zScaler;
-    EnvironmentParameters envParams; 
 
     private void Awake()
     {
