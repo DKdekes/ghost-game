@@ -169,8 +169,10 @@ GameObject:
   - component: {fileID: 8801559196740056442}
   - component: {fileID: 8801559196740056443}
   - component: {fileID: 8801559196740056433}
+  - component: {fileID: -6755685119782250699}
   - component: {fileID: 8801559196740056444}
   - component: {fileID: 8801559196740056445}
+  - component: {fileID: 8801559196740056441}
   - component: {fileID: 8801559196740056440}
   - component: {fileID: 8801559196740056327}
   m_Layer: 0
@@ -298,6 +300,22 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &-6755685119782250699
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8801559196740056434}
+  serializedVersion: 2
+  m_Mass: 2
+  m_Drag: 0.01
+  m_AngularDrag: 100
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 84
+  m_CollisionDetection: 0
 --- !u!114 &8801559196740056444
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -318,7 +336,6 @@ MonoBehaviour:
   player: {fileID: 0}
   origin: {fileID: 8801559195394870088}
   barrel: {fileID: 8801559194991832029}
-  reward: 0
 --- !u!114 &8801559196740056445
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -333,6 +350,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movementSpeed: 1
   rotationSpeed: 360
+--- !u!143 &8801559196740056441
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8801559196740056434}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Height: 1
+  m_Radius: 0.5
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8801559196740056440
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -366,7 +401,7 @@ MonoBehaviour:
   m_RaysPerDirection: 8
   m_MaxRayDegrees: 90
   m_SphereCastRadius: 1
-  m_RayLength: 10
+  m_RayLength: 1000
   m_RayLayerMask:
     serializedVersion: 2
     m_Bits: 4294967291

@@ -21,6 +21,9 @@ public class GhostAgent : Agent
     public EnvironmentParameters envParams;
     private Vector2 noiseDirection = Vector2.zero;
     private float directionDecay = 0.99f;
+    private bool triggerBool = true;
+    float minX, maxX, minZ, maxZ, xScaler, zScaler;
+    EnvironmentParameters envParams; 
 
     private void Awake()
     {
@@ -55,10 +58,11 @@ public class GhostAgent : Agent
     {
         this.player.SetSpeed(envParams.GetWithDefault("player_speed", 0.0f));
         reward = 0f;
-        this.transform.position = new Vector3(Random.Range(this.minX + 1f, this.maxX - 1f), 1, Random.Range(this.minZ + 1f, this.maxZ - 1f));
+        this.transform.position = new Vector3(Random.Range(this.minX + 1.5f, this.maxX - 1.5f), 1, Random.Range(this.minZ + 1.5f, this.maxZ - 1.5f));
         this.transform.Rotate(new Vector3(0, Random.Range(-180f, 180f), 0));
-        this.player.transform.localPosition = new Vector3(Random.Range(this.minX, this.maxX), 0.5f, this.minZ);
         noiseDirection = Vector2.zero;
+        this.player.transform.localPosition = new Vector3(Random.Range(this.minX + 1f, this.maxX - 1f), 0.5f, this.minZ + 1f);
+        triggerBool = true;
     }
 
     private void SetBoundaries()
@@ -159,7 +163,20 @@ public class GhostAgent : Agent
             FinalizeReward(false);
             EndEpisode();
         }
+
     }
+
+    //collides with an obstacle
+    /*public void OnTriggerEnter(Collider other)
+    {
+        if (triggerBool == true)
+        {
+            FinalizeReward(false);
+            EndEpisode();
+            triggerBool = false;
+        }
+        
+    }*/
 
     public override void Heuristic(float[] actionsOut)
     {
