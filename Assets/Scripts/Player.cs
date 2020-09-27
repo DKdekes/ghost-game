@@ -8,6 +8,9 @@ public class Player : MonoBehaviour
     public float speed = 1f;
     private float heuristicSpeed = 0.7f;
     private float noiseLevel = 1f;
+    private Camera playerCam;
+    Rigidbody m_Rigidbody;
+    Vector3 m_EulerAngleVelocity;
 
     public static bool IsHit(Vector3 projectilePosition, float maxRange)
     {
@@ -21,6 +24,12 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         position = this.transform.position;
+
+        //finds the player camera 
+        playerCam = GameObject.Find("PlayerCamera").GetComponent<Camera>();
+
+        //Fetch the Rigidbody from the GameObject with this script attached
+        m_Rigidbody = GetComponent<Rigidbody>();
     }
 
     public float GetNoiseLevel()
@@ -35,10 +44,13 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        this.transform.localPosition += Vector3.forward * Time.deltaTime * speed;
         //looking
-        this.transform.Rotate(-Input.GetAxis("Mouse Y"), Input.GetAxis("Mouse X"), 0);
-        
+        //m_EulerAngleVelocity = new Vector3(0, Input.GetAxis("Mouse X") * 100, 0);
+        //Quaternion deltaRotation = Quaternion.Euler(m_EulerAngleVelocity * Time.deltaTime);
+        //m_Rigidbody.MoveRotation(m_Rigidbody.rotation * deltaRotation);
+        this.transform.Rotate(0, Input.GetAxis("Mouse X")*2, 0);
+        playerCam.transform.Rotate(-Input.GetAxis("Mouse Y") * 2, 0, 0);
+
         if (Input.GetKey(KeyCode.W))
         {
             this.transform.localPosition += this.transform.forward * Time.deltaTime * heuristicSpeed;
