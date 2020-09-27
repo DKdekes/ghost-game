@@ -35,7 +35,7 @@ public class GhostAgent : Agent
         this.movementController = GetComponent<MovementController>();
         this.shooter = GetComponent<ShootProjectiles>();
         Projectile.PlayerHit += Reward;
-        Time.timeScale = 6f;
+        // Time.timeScale = 6f;
     }
 
 
@@ -128,15 +128,15 @@ public class GhostAgent : Agent
         // walk
         int action = Mathf.FloorToInt(act[0]);
 
-        if (action >= 0 && action <=3)
+        if (action >= 0 && action <= 1)
         {
             Move(action);
         }
-        else if (action >= 4 && action <=5)
+        else if (action >= 2 && action <=3)
         {
             Rotate(action);
         }
-        else if (action == 6)
+        else if (action == 4)
         {
             Shoot();
         }
@@ -178,33 +178,26 @@ public class GhostAgent : Agent
 
     public override void Heuristic(float[] actionsOut)
     {
-        actionsOut[0] = 3f;
+        actionsOut[0] = 0f;
         // walk
         if (Input.GetKey(KeyCode.W))
         {
-            actionsOut[0] = 0f;
-        }
-        if (Input.GetKey(KeyCode.A))
-        {
             actionsOut[0] = 1f;
-        }
-        if (Input.GetKey(KeyCode.D)) {
-            actionsOut[0] = 2f;
         }
         // 3 is do nothing
         // rotate
         if (Input.GetKey(KeyCode.LeftArrow))
         {
-            actionsOut[0] = 4;
+            actionsOut[0] = 2;
         }
         if (Input.GetKey(KeyCode.RightArrow))
         {
-            actionsOut[0] = 5;
+            actionsOut[0] = 3;
         }
         // shoot
         if (Input.GetKey(KeyCode.Space))
         {
-            actionsOut[0] = 6;
+            actionsOut[0] = 4;
         }
     }
 
@@ -223,14 +216,10 @@ public class GhostAgent : Agent
 
     private void Move(int direction)
     {
-            // forward
-            if (direction == 0) this.movementController.Move(Vector3.forward);
-            // left
-            if (direction == 1) this.movementController.Move(Vector3.left);
-            // right
-            if (direction == 2) this.movementController.Move(Vector3.right);
+            // stay still if 0
 
-            // direction == 3 for staying still
+            // move forward
+            if (direction == 1) this.movementController.Move(Vector3.forward);
     }
 
     private void Rotate(int direction)
@@ -238,9 +227,9 @@ public class GhostAgent : Agent
             float rotationStep = 0.1f;
             Quaternion rotation = Quaternion.identity;
             // rotate left
-            if (direction == 4) this.movementController.Rotate(-rotationStep);
+            if (direction == 2) this.movementController.Rotate(-rotationStep);
             // rotate right
-            if (direction == 5) this.movementController.Rotate(rotationStep);
+            if (direction == 3) this.movementController.Rotate(rotationStep);
     }
 
     public virtual void Shoot()

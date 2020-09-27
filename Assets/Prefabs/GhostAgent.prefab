@@ -277,7 +277,7 @@ MonoBehaviour:
   m_BrainParameters:
     VectorObservationSize: 3
     NumStackedVectorObservations: 5
-    VectorActionSize: 07000000
+    VectorActionSize: 05000000
     VectorActionDescriptions: []
     VectorActionSpaceType: 0
   m_Model: {fileID: 5022602860645237092, guid: 8baba7a74355c414780f6dee5f422af1, type: 3}
@@ -336,6 +336,7 @@ MonoBehaviour:
   player: {fileID: 0}
   origin: {fileID: 8801559195394870088}
   barrel: {fileID: 8801559194991832029}
+  reward: 0
 --- !u!114 &8801559196740056445
 MonoBehaviour:
   m_ObjectHideFlags: 0
