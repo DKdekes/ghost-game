@@ -171,6 +171,7 @@ GameObject:
   - component: {fileID: 8801559196740056433}
   - component: {fileID: -6755685119782250699}
   - component: {fileID: 8801559196740056444}
+  - component: {fileID: 239966146231093931}
   - component: {fileID: 8801559196740056445}
   - component: {fileID: 8801559196740056441}
   - component: {fileID: 8801559196740056440}
@@ -275,12 +276,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 3
+    VectorObservationSize: 5
     NumStackedVectorObservations: 5
     VectorActionSize: 05000000
     VectorActionDescriptions: []
     VectorActionSpaceType: 0
-  m_Model: {fileID: 5022602860645237092, guid: 8baba7a74355c414780f6dee5f422af1, type: 3}
+  m_Model: {fileID: 5022602860645237092, guid: 5ccb248d06c51ae4bb440d92a6e0d0ed, type: 3}
   m_InferenceDevice: 0
   m_BehaviorType: 0
   m_BehaviorName: GhostAgent
@@ -309,7 +310,7 @@ Rigidbody:
   m_GameObject: {fileID: 8801559196740056434}
   serializedVersion: 2
   m_Mass: 2
-  m_Drag: 0.01
+  m_Drag: 0.06
   m_AngularDrag: 100
   m_UseGravity: 1
   m_IsKinematic: 0
@@ -336,7 +337,26 @@ MonoBehaviour:
   player: {fileID: 0}
   origin: {fileID: 8801559195394870088}
   barrel: {fileID: 8801559194991832029}
-  reward: 0
+--- !u!114 &239966146231093931
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8801559196740056434}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9904275571037f84cbd62ab40fd942d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  agentParameters:
+    maxStep: 0
+  hasUpgradedFromAgentParameters: 1
+  MaxStep: 0
+  boundaryPlane: {fileID: 0}
+  player: {fileID: 0}
+  origin: {fileID: 8801559195394870088}
+  barrel: {fileID: 8801559194991832029}
 --- !u!114 &8801559196740056445
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -349,8 +369,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1e98dd2b8c703445bed5d8db658b5e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 1
-  rotationSpeed: 360
 --- !u!143 &8801559196740056441
 CharacterController:
   m_ObjectHideFlags: 0
@@ -402,7 +420,7 @@ MonoBehaviour:
   m_RaysPerDirection: 8
   m_MaxRayDegrees: 90
   m_SphereCastRadius: 1
-  m_RayLength: 1000
+  m_RayLength: 200
   m_RayLayerMask:
     serializedVersion: 2
     m_Bits: 4294967291

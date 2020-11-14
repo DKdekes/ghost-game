@@ -15,18 +15,29 @@ public class GhostAgent : Agent
     public GameObject barrel;
     private readonly object positionLock = new object();
     private float shootPunishment = 0.01f;
-    public float reward = 0f;
+    protected float reward = 0f;
     private bool resetting = false;
     protected float minX, maxX, minZ, maxZ, xScaler, zScaler;
     public EnvironmentParameters envParams;
     private Vector2 noiseDirection = Vector2.zero;
     private float directionDecay = 0.99f;
     private bool triggerBool = true;
+    private int maxCollisions = 20;
+    private int numCollisions;
 
     private void Awake()
     {
         SetBoundaries();
         envParams = Academy.Instance.EnvironmentParameters;
+        if (Time.timeScale == 1)
+        {
+            Time.timeScale = 6f;
+        }
+        else
+        {
+            // we're training
+            GameSettings.isTraining = true;
+        }
     }
 
     void Start()
@@ -35,7 +46,6 @@ public class GhostAgent : Agent
         this.movementController = GetComponent<MovementController>();
         this.shooter = GetComponent<ShootProjectiles>();
         Projectile.PlayerHit += Reward;
-        // Time.timeScale = 6f;
     }
 
 
@@ -49,7 +59,7 @@ public class GhostAgent : Agent
     public void FinalizeReward(bool won)
     {
         float min = won ? 0.1f : 0;
-        SetReward(reward > 0 ? reward : min);
+        SetReward(reward > min ? reward : min);
     }
 
     public override void OnEpisodeBegin()
@@ -61,6 +71,18 @@ public class GhostAgent : Agent
         noiseDirection = Vector2.zero;
         this.player.transform.localPosition = new Vector3(Random.Range(this.minX + 1f, this.maxX - 1f), 0.5f, this.minZ + 1f);
         triggerBool = true;
+        this.movementController.Begin();
+        numCollisions = 0;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        numCollisions++;
+        if (numCollisions == maxCollisions)
+        {
+            FinalizeReward(false);
+            EndEpisode();
+        }
     }
 
     private void SetBoundaries()
@@ -224,12 +246,11 @@ public class GhostAgent : Agent
 
     private void Rotate(int direction)
     {
-            float rotationStep = 0.1f;
             Quaternion rotation = Quaternion.identity;
             // rotate left
-            if (direction == 2) this.movementController.Rotate(-rotationStep);
+            if (direction == 2) this.movementController.Rotate(-1f);
             // rotate right
-            if (direction == 3) this.movementController.Rotate(rotationStep);
+            if (direction == 3) this.movementController.Rotate(1f);
     }
 
     public virtual void Shoot()

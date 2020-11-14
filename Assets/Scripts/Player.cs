@@ -6,11 +6,18 @@ public class Player : MonoBehaviour
 {
     private static Vector3 position;
     public float speed = 1f;
+    private float trainingSpeed = 0f;
+    private bool isTraining;
     private float heuristicSpeed = 0.7f;
     private float noiseLevel = 1f;
     private Camera playerCam;
     Rigidbody m_Rigidbody;
     Vector3 m_EulerAngleVelocity;
+
+    private void Start()
+    {
+        isTraining = GameSettings.isTraining;
+    }
 
     public static bool IsHit(Vector3 projectilePosition, float maxRange)
     {
@@ -26,7 +33,7 @@ public class Player : MonoBehaviour
         position = this.transform.position;
 
         //finds the player camera 
-        playerCam = GameObject.Find("PlayerCamera").GetComponent<Camera>();
+        playerCam = this.GetComponentInChildren<Camera>();
 
         //Fetch the Rigidbody from the GameObject with this script attached
         m_Rigidbody = GetComponent<Rigidbody>();
@@ -39,7 +46,7 @@ public class Player : MonoBehaviour
 
     public void SetSpeed(float speed)
     {
-        this.speed = speed;
+        this.trainingSpeed = speed;
     }
 
     void Update()
@@ -48,8 +55,16 @@ public class Player : MonoBehaviour
         //m_EulerAngleVelocity = new Vector3(0, Input.GetAxis("Mouse X") * 100, 0);
         //Quaternion deltaRotation = Quaternion.Euler(m_EulerAngleVelocity * Time.deltaTime);
         //m_Rigidbody.MoveRotation(m_Rigidbody.rotation * deltaRotation);
-        this.transform.Rotate(0, Input.GetAxis("Mouse X")*2, 0);
-        playerCam.transform.Rotate(-Input.GetAxis("Mouse Y") * 2, 0, 0);
+
+        if (isTraining)
+        {
+            this.transform.localPosition += this.transform.forward * Time.deltaTime * trainingSpeed;
+        }
+        else
+        {
+            this.transform.Rotate(0, Input.GetAxis("Mouse X") * 2, 0);
+            playerCam.transform.Rotate(-Input.GetAxis("Mouse Y") * 2, 0, 0);
+        }
 
         if (Input.GetKey(KeyCode.W))
         {
@@ -67,7 +82,7 @@ public class Player : MonoBehaviour
         {
             this.transform.localPosition += this.transform.right * Time.deltaTime * heuristicSpeed;
         }
-        
+               
         position = this.transform.localPosition;
     }
 

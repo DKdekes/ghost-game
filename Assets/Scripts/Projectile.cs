@@ -13,7 +13,7 @@ public class Projectile : MonoBehaviour
     public void Setup(Vector3 direction)
     {
         this.shootDir = direction;
-        Destroy(gameObject, 10f);
+        Destroy(gameObject, GameSettings.projectileTimeout);
     }
 
     public void Update()
